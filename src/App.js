@@ -1,0 +1,324 @@
+import React from "react";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Items from "./components/Items";
+import Categories from "./components/Categories";
+import ShowFullItem from "./components/ShowFullItem";
+
+const categoriesType = [
+  { key: "all", name: "Все" },
+  { key: "Outerwear", name: "Верхняя одежда" },
+  { key: "Jeans", name: "Джинсы" },
+  { key: "T-Shirts", name: "Футболки" },
+  { key: "Skirts", name: "Юбки" },
+  { key: "Hoodies", name: "Свитшоты" },
+  { key: "Shoes", name: "Обувь" },
+  { key: "Dresses", name: "Платья" },
+  { key: "Shirts", name: "Рубашки" },
+  { key: "Shorts", name: "Шорты" },
+  { key: "Accessories", name: "Аксессуары" },
+];
+
+const categoriesSex = [
+  { key: "all", name: "Все" },
+  { key: "Man", name: "Мужской" },
+  { key: "Woman", name: "Женский" },
+  { key: "Unisex", name: "Унисекс" },
+];
+
+const items = [
+  {
+    id: 1,
+    title: 'Кожаная куртка "Rebel"',
+    img: "rebel.jpg",
+    shortDesc: "Идеальное сочетание стиля и бунтарского духа.",
+    fullDesc:
+      "Кожаная куртка премиум-класса из натуральной кожи толщиной 1.2 мм. Усиленные швы, съемный капюшон, 6 карманов. Подкладка из дышащего полиэстера. Идеальна для прохладной погоды и стильных городских образов.",
+    category: "Outerwear",
+    sex: "Man",
+    price: "450.00$",
+    color_car: "Цвет: Чёрный",
+    number_car: "Артикул: JKT2024BLK",
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    materials: "Натуральная кожа 100%",
+    country: "Италия",
+  },
+  {
+    id: 2,
+    title: 'Шерстяное пальто "Elegance"',
+    img: "palto.jpg",
+    shortDesc: "Теплота и утончённость в каждой детали.",
+    fullDesc:
+      "Классическое шерстяное пальто прямого кроя из кашемира 80% и шерсти 20%. Длина миди, подкладка из вискозы, глубокие карманы, пояс в комплекте. Сохраняет тепло даже в мороз до -25°C.",
+    category: "Outerwear",
+    sex: "Woman",
+    price: "600.00$",
+    color_car: "Цвет: Черный",
+    number_car: "Артикул: WCT2024BGE",
+    sizes: ["42", "44", "46", "48", "50"],
+    materials: "Кашемир 80%, шерсть 20%",
+    country: "Франция",
+  },
+  {
+    id: 3,
+    title: 'Джинсы "Vintage 90s"',
+    img: "vintage.jpg",
+    shortDesc: "Классика, которая никогда не выйдет из моды.",
+    fullDesc:
+      "Джинсы в ретро-стиле 90-х с высокой посадкой. Плотность хлопка 12oz, эффект легкого старения, 5 карманов. Узкие от бедра, слегка расклешенные к низу. Идеальная посадка для любого типа фигуры.",
+    category: "Jeans",
+    sex: "Woman",
+    price: "120.00$",
+    color_car: "Цвет: Синий",
+    number_car: "Артикул: VJN2024BLU",
+    sizes: ["24", "25", "26", "27", "28", "29", "30"],
+    materials: "Хлопок 98%, эластан 2%",
+    country: "США",
+  },
+  {
+    id: 4,
+    title: 'Футболка "Basic White"',
+    img: "BasicTshort.jpg",
+    shortDesc: "Универсальная белая футболка для любого образа.",
+    fullDesc:
+      "Базовый крой из плотного хлопка 200 г/м². Круглый вырез, двойная строчка по краям, не просвечивает. Сохраняет форму после многократных стирок. Идеальна для офиса под пиджак или casual-образов.",
+    category: "T-Shirts",
+    sex: "Man",
+    price: "25.00$",
+    color_car: "Цвет: Белый",
+    number_car: "Артикул: BTS2024WHT",
+    sizes: ["XS", "S", "M", "L", "XL"],
+    materials: "Хлопок 100%",
+    country: "Португалия",
+  },
+  {
+    id: 5,
+    title: 'Юбка "Office Lady"',
+    img: "officeLady.jpg",
+    shortDesc: "Строгая юбка для делового стиля.",
+    fullDesc:
+      "Карандаш длиной до колена из костюмной ткани. Разрез сзади для удобства ходьбы, подкладка, пояс с внутренней резинкой. Идеально сочетается с блузами и жакетами. Сохраняет форму весь день.",
+    category: "Skirts",
+    sex: "Woman",
+    price: "85.00$",
+    color_car: "Цвет: Красный",
+    number_car: "Артикул: OFS2024GRY",
+    sizes: ["XS", "S", "M", "L"],
+    materials: "Полиэстер 65%, вискоза 35%",
+    country: "Испания",
+  },
+  {
+    id: 6,
+    title: 'Свитшот "Urban"',
+    img: "Urban.jpg",
+    shortDesc: "Удобный свитшот для повседневной носки.",
+    fullDesc:
+      "Оверсайз крой из плотного хлопка с начесом внутри. Капюшон с регулировкой, карман-кенгуру, манжеты и низ с резинкой. Унисекс модель подходит для мужчин и женщин.",
+    category: "Hoodies",
+    sex: "Unisex",
+    price: "65.00$",
+    color_car: "Цвет: Чёрный",
+    number_car: "Артикул: URH2024BLK",
+    sizes: ["S", "M", "L", "XL"],
+    materials: "Хлопок 80%, полиэстер 20%",
+    country: "Турция",
+  },
+  {
+    id: 7,
+    title: 'Кроссовки Adidas "Runner Pro"',
+    img: "AdikSportjpg.jpg",
+    shortDesc: "Лёгкие и удобные кроссовки для бега.",
+    fullDesc:
+      "Технологичная модель с амортизирующей подошвой Boost. Дышащий верх из сетки, система поддержки стопы Torsion, стелька OrthoLite. Вес всего 280 гр. Подходят для длительных пробежек.",
+    category: "Shoes",
+    sex: "Man",
+    price: "130.00$",
+    color_car: "Цвет: Синий/Белый",
+    number_car: "Артикул: RSP2024BLU",
+    sizes: ["39", "40", "41", "42", "43", "44", "45"],
+    materials: "Сетка 70%, полиуретан 30%",
+    country: "Германия",
+  },
+  {
+    id: 8,
+    title: 'Платье "KALLISTO`S NYMPHS"',
+    img: "Callisto.jpg",
+    shortDesc: "Элегантное вечернее платье для особых случаев.",
+    fullDesc:
+      "Роскошное платье в греческом стиле из струящегося шелка. Асимметричный крой, драпировки на плечах, завышенная талия. Подчеркивает фигуру и создает эффект легкости. Идеально для свадеб и торжеств.",
+    category: "Dresses",
+    sex: "Woman",
+    price: "220.00$",
+    color_car: "Цвет: Бежевый",
+    number_car: "Артикул: EVS2024RED",
+    sizes: ["40", "42", "44", "46"],
+    materials: "Шелк 100%",
+    country: "Греция",
+  },
+  {
+    id: 9,
+    title: 'Рубашка "Tom Ford"',
+    img: "TomFord.jpg",
+    shortDesc: "Классическая рубашка для офиса.",
+    fullDesc:
+      "Рубашка премиум-класса с двойными манжетами. Узкий крой, костяные пуговицы, воротник с усиленными уголками. Не мнется, сохраняет свежий вид весь день. Подходит для деловых встреч.",
+    category: "Shirts",
+    sex: "Man",
+    price: "75.00$",
+    color_car: "Цвет: Черный",
+    number_car: "Артикул: BSC2024BLU",
+    sizes: ["38", "39", "40", "41", "42"],
+    materials: "Хлопок египетский 200 нитей",
+    country: "Италия",
+  },
+  {
+    id: 10,
+    title: 'Шорты "Beach Time"',
+    img: "Beach.jpg",
+    shortDesc: "Лёгкие шорты для отдыха на пляже.",
+    fullDesc:
+      "Шорты из быстросохнущей ткани с UPF 50+ защитой. Регулируемый пояс, 2 боковых кармана + задний карман на молнии. Не выцветают на солнце. Идеальны для плавания и активного отдыха.",
+    category: "Shorts",
+    sex: "Unisex",
+    price: "40.00$",
+    color_car: "Цвет: Синий",
+    number_car: "Артикул: BTS2024YLW",
+    sizes: ["S", "M", "L", "XL"],
+    materials: "Полиамид 85%, эластан 15%",
+    country: "Бразилия",
+  },
+  {
+    id: 11,
+    title: 'Куртка "Biker Style"',
+    img: "Terminator.jpg",
+    shortDesc: "Стильная косуха для смелых образов.",
+    fullDesc:
+      "Куртка в стиле байкеров с металлической фурнитурой. Усиленные локти и плечи, съемный меховой воротник, 8 молний. Внутренний карман для документов. Создает брутальный образ.",
+    category: "Outerwear",
+    sex: "Man",
+    price: "290.00$",
+    color_car: "Цвет: Черный",
+    number_car: "Артикул: BKS2024BRN",
+    sizes: ["XS", "S", "M", "L"],
+    materials: "Кожа буйвола 100%",
+    country: "Великобритания",
+  },
+  {
+    id: 12,
+    title: 'Галстук "Premium Silk"',
+    img: "Galst.jpg",
+    shortDesc: "Шелковый галстук премиум качества.",
+    fullDesc:
+      "Ручной работы из двойного шелка. Длина 148 см, ширина 7 см. Узел держит форму весь день. Эксклюзивный принт не выцветает. Комплектуется фирменной шкатулкой для хранения.",
+    category: "Accessories",
+    sex: "Man",
+    price: "60.00$",
+    color_car: "Цвет: Серый/Черный",
+    number_car: "Артикул: PST2024BRG",
+    sizes: ["One Size"],
+    materials: "Шелк 100%",
+    country: "Япония",
+  },
+];
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      orders: [],
+      items: items,
+      filters: {
+        category: "all",
+        sex: "all",
+      },
+      currentItems: [],
+      showFullItem: false,
+      fullItem: {},
+    };
+    this.addToOrder = this.addToOrder.bind(this);
+    this.deleteOrder = this.deleteOrder.bind(this);
+    this.updateFilter = this.updateFilter.bind(this);
+    this.onShowItem = this.onShowItem.bind(this);
+    this.applyFilters = this.applyFilters.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({ currentItems: this.state.items });
+  }
+
+  render() {
+    return (
+      <div className="wrapper">
+        <Header orders={this.state.orders} onDelete={this.deleteOrder} />
+        <Categories
+          nameFilter="Тип одежды: "
+          categories={categoriesType}
+          chooseCategory={(key) => this.updateFilter("category", key)}
+        />
+        <Categories
+          nameFilter="Пол: "
+          categories={categoriesSex}
+          chooseCategory={(key) => this.updateFilter("sex", key)}
+        />
+        <Items
+          onShowItem={this.onShowItem}
+          items={this.state.currentItems}
+          onAdd={this.addToOrder}
+        />
+        {this.state.showFullItem && (
+          <ShowFullItem
+            onAdd={this.addToOrder}
+            onShowItem={this.onShowItem}
+            item={this.state.fullItem}
+          />
+        )}
+        <Footer />
+      </div>
+    );
+  }
+
+  onShowItem(item) {
+    this.setState({ fullItem: item });
+    this.setState({ showFullItem: !this.state.showFullItem });
+  }
+
+  updateFilter(type, value) {
+    this.setState(
+      (prevState) => ({
+        filters: {
+          ...prevState.filters,
+          [type]: value,
+        },
+      }),
+      this.applyFilters
+    );
+  }
+
+  applyFilters() {
+    const { items, filters } = this.state;
+    let filtered = items;
+
+    if (filters.category !== "all") {
+      filtered = filtered.filter((el) => el.category === filters.category);
+    }
+    if (filters.sex !== "all") {
+      filtered = filtered.filter((el) => el.sex === filters.sex);
+    }
+
+    this.setState({ currentItems: filtered });
+  }
+
+  deleteOrder(id) {
+    this.setState({ orders: this.state.orders.filter((el) => el.id !== id) });
+  }
+
+  addToOrder(item) {
+    let isInArray = false;
+    this.state.orders.forEach((el) => {
+      if (el.id === item.id) isInArray = true;
+    });
+    if (!isInArray) this.setState({ orders: [...this.state.orders, item] });
+  }
+}
+
+export default App;
