@@ -1,18 +1,27 @@
-import React, { Component } from "react";
+import { useState } from "react";
 
-export class Categories extends Component {
-  render() {
-    return (
-      <div className="categories">
-        <span>{this.props.nameFilter}</span>
-        {this.props.categories.map((el) => (
-          <div key={el.key} onClick={() => this.props.chooseCategory(el.key)}>
-            {el.name}
-          </div>
-        ))}
-      </div>
-    );
-  }
+function Categories(props) {
+  const [activeCategory, setActiveCategory] = useState(null);
+
+  const handleCategoryClick = (key) => {
+    setActiveCategory(key);
+    props.chooseCategory(key);
+  };
+
+  return (
+    <div className="categories">
+      <span>{props.nameFilter}</span>
+      {props.categories.map((el) => (
+        <div
+          key={el.key}
+          onClick={() => handleCategoryClick(el.key)}
+          className={activeCategory === el.key ? "active" : ""}
+        >
+          {el.name}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default Categories;

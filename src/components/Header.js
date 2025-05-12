@@ -6,13 +6,20 @@ import Order from "./Order";
 
 const showOrders = (props) => {
   let summa = 0;
-  props.orders.forEach((el) => (summa += 1));
+  let sumPrice = 0;
+  props.orders.forEach((el) => {
+    summa += 1;
+    sumPrice += parseFloat(el.price.replace(/[^\d.]/g, ""));
+  });
+  const formattedSum = sumPrice.toFixed(2);
   return (
     <div>
       {props.orders.map((el) => (
         <Order onDelete={props.onDelete} key={el.id} item={el} />
       ))}
       <p className="summa">Количество товаров: {summa}</p>
+      <p className="summa-price">Общая цена: {formattedSum}$</p>
+      <button>Оформить заказ</button>
     </div>
   );
 };
@@ -70,6 +77,9 @@ export default function Header(props) {
           onClick={() => setAccOpen(!accOpen)}
           className={`acc-cart-button ${accOpen && "active"}`}
         />
+        <span className="AuthSpan" onClick={() => setAccOpen(!accOpen)}>
+          Авторизуйтесь
+        </span>
         <FaShoppingCart
           onClick={() => setCartOpen(!cartOpen)}
           className={`shop-cart-button ${cartOpen && "active"}`}

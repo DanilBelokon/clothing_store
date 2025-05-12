@@ -58,7 +58,7 @@ header .acc-cart-button {
   float: center;
   margin-left: 50px;
 
-  transform: scale(2);
+  transform: scale(1.5);
   cursor: pointer;
   transition: color, transform 500ms ease;
 }
@@ -66,7 +66,7 @@ header .acc-cart-button {
 header .acc-cart-button:hover,
 header .acc-cart-button.active {
   color: #dc3d3d;
-  transform: scale(1.5);
+  transform: scale(2);
 }
 
 header .shop-cart {
@@ -132,6 +132,36 @@ header .shop-cart .summa {
   font-size: 20px;
   margin-bottom: 20px;
 }
+header .shop-cart .summa-price {
+  float: left;
+  width: 100%;
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: green;
+}
+
+header .shop-cart button {
+  width: 100%;
+  font-size: 20px;
+  margin-bottom: 20px;
+  background-color: rgb(255, 0, 0);
+  border: none;
+  border-radius: 8px;
+  height: 40px;
+  color: #ffffff;
+  transition: background-color 0.3s;
+}
+
+header .shop-cart button:hover {
+  width: 100%;
+  font-size: 20px;
+  margin-bottom: 20px;
+  background-color: rgb(202, 0, 0);
+  border: none;
+  border-radius: 8px;
+  height: 40px;
+  color: #ffffff;
+}
 
 header .presentation {
   margin: 50px 0;
@@ -167,6 +197,16 @@ header .presentation::before {
   color: #fff;
 }
 
+header .AuthSpan {
+  margin-left: 10px;
+  cursor: pointer;
+  transition: opacity 500ms ease;
+}
+
+header .AuthSpan:hover {
+  opacity: 0.5;
+}
+
 .categories div {
   display: inline-block;
   background: #c8c8c8;
@@ -178,10 +218,22 @@ header .presentation::before {
   border: 1px solid transparent;
   transition: all 500ms ease;
 }
-
+.categories span {
+  margin-right: 10px;
+}
 .categories div:hover {
   border-color: silver;
   transform: scale(1.1);
+}
+
+.categories div.active {
+  background: rgba(2, 2, 2, 0.359);
+  transform: scale(1.1);
+  border-color: silver;
+}
+
+.categories div:active {
+  transform: scale(1.05);
 }
 
 .full-item {
@@ -301,9 +353,23 @@ main .add-to-cart,
   transition: transform 500ms ease;
 }
 
+.add-text-order {
+  position: absolute;
+  font-size: 14px;
+  right: 60px;
+  bottom: 25px;
+  color: rgb(126, 0, 0);
+}
+
 main .add-to-cart:hover,
 .full-item .add-to-cart:hover {
   transform: scale(1.5) translateY(-5px);
+}
+
+main .add-to-cart:active,
+.full-item .add-to-cart:active {
+  transform: scale(1.5) translateY(-5px);
+  background-color: rgb(105, 0, 0);
 }
 
 footer {
@@ -368,4 +434,58 @@ footer {
 
 .login-button:hover {
   background-color: #3367d6;
+}
+
+.sing-up {
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.sing-up button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #069;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+}
+
+.search-panel {
+  position: relative;
+  margin-bottom: 30px;
+  max-width: 500px;
+}
+
+.search-panel input {
+  width: 100%;
+  padding: 10px 15px;
+  padding-right: 35px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.search-panel input:focus {
+  outline: none;
+  border-color: #4285f4;
+  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+}
+
+.search-clear {
+  position: absolute;
+  right: -35px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #999;
+  padding: 0 5px;
+}
+
+.search-clear:hover {
+  color: #333;
 }

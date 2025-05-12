@@ -1,53 +1,62 @@
-import React, { Component } from "react";
-
-export class ShowFullItem extends Component {
-  render() {
-    return (
-      <div className="full-item">
-        <div>
-          <img
-            src={"./img/" + this.props.item.img}
-            onClick={() => this.props.onShowItem(this.props.item)}
-            alt=""
-          />
-          <h2>{this.props.item.title}</h2>
-          <p>{this.props.item.fullDesc}</p>
-          <p>{this.props.item.color_car}</p>
-          <p>{this.props.item.number_car}</p>
-          <p>
-            {this.props.item.sex === "Man"
-              ? "Пол: Мужской"
-              : this.props.item.sex === "Woman"
-              ? "Пол: Женский"
-              : "Пол: Универсальный"}
-          </p>
-          <p>Страна производитель: {this.props.item.country}</p>
-          <p>Материалы: {this.props.item.materials}</p>
-          <b>{this.props.item.price}</b>
-          <div
-            className="add-to-cart"
-            onClick={() => this.props.onAdd(this.props.item)}
-          >
-            +
-          </div>
-          <div className="size-selector">
-            <h3>Доступные размеры:</h3>
-            <div className="size-buttons">
-              {this.props.item.sizes.map((size) => (
-                <button
-                  key={size}
-                  className="size-button"
-                  onClick={() => console.log(`Выбран размер: ${size}`)}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
+function ShowFullItem(props) {
+  return (
+    <div className="full-item">
+      <div>
+        <button
+          className="close-button"
+          onClick={() => props.onShowItem(props.item)}
+          style={{
+            position: "absolute",
+            right: "10px",
+            top: "10px",
+            background: "none",
+            border: "none",
+            fontSize: "20px",
+            cursor: "pointer",
+          }}
+        >
+          ×
+        </button>
+        <img
+          src={"./img/" + props.item.img}
+          onClick={() => props.onShowItem(props.item)}
+          alt=""
+        />
+        <h2>{props.item.title}</h2>
+        <p>{props.item.fullDesc}</p>
+        <p>{props.item.color_car}</p>
+        <p>{props.item.number_car}</p>
+        <p>
+          {props.item.sex === "Man"
+            ? "Пол: Мужской"
+            : props.item.sex === "Woman"
+            ? "Пол: Женский"
+            : "Пол: Универсальный"}
+        </p>
+        <p>Страна производитель: {props.item.country}</p>
+        <p>Материалы: {props.item.materials}</p>
+        <b>Цена: {props.item.price}</b>
+        <div className="add-to-cart" onClick={() => props.onAdd(props.item)}>
+          +
+        </div>
+        <div className="size-selector">
+          <h3>Доступные размеры:</h3>
+          <div className="size-buttons">
+            {props.item.sizes.map((size) => (
+              <button
+                key={size}
+                className="size-button"
+                onClick={() => console.log(`Выбран размер: ${size}`)}
+              >
+                {size}
+              </button>
+            ))}
           </div>
         </div>
+        <div className="add-text-order">Добавить в корзину</div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default ShowFullItem;

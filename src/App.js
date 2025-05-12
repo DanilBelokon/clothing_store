@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Items from "./components/Items";
 import Categories from "./components/Categories";
 import ShowFullItem from "./components/ShowFullItem";
+import SearchPanel from "./components/SearchPanel";
 
 const categoriesType = [
   { key: "all", name: "Все" },
@@ -26,7 +27,7 @@ const categoriesSex = [
   { key: "Unisex", name: "Унисекс" },
 ];
 
-const items = [
+const itemsData = [
   {
     id: 1,
     title: 'Кожаная куртка "Rebel"',
@@ -221,83 +222,35 @@ const items = [
   },
 ];
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      orders: [],
-      items: items,
-      filters: {
-        category: "all",
-        sex: "all",
-      },
-      currentItems: [],
-      showFullItem: false,
-      fullItem: {},
-    };
-    this.addToOrder = this.addToOrder.bind(this);
-    this.deleteOrder = this.deleteOrder.bind(this);
-    this.updateFilter = this.updateFilter.bind(this);
-    this.onShowItem = this.onShowItem.bind(this);
-    this.applyFilters = this.applyFilters.bind(this);
-  }
+const App = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [orders, setOrders] = useState([]);
+  const [items, setItems] = useState(itemsData); // eslint-disable-line no-unused-vars
+  const [filters, setFilters] = useState({
+    category: "all",
+    sex: "all",
+  });
+  const [currentItems, setCurrentItems] = useState([]);
+  const [showFullItem, setShowFullItem] = useState(false);
+  const [fullItem, setFullItem] = useState({});
 
-  componentDidMount() {
-    this.setState({ currentItems: this.state.items });
-  }
+  // Инициализация текущих товаров
+  useEffect(() => {
+    setCurrentItems(items);
+  }, [items]);
 
-  render() {
-    return (
-      <div className="wrapper">
-        <Header orders={this.state.orders} onDelete={this.deleteOrder} />
-        <Categories
-          nameFilter="Тип одежды: "
-          categories={categoriesType}
-          chooseCategory={(key) => this.updateFilter("category", key)}
-        />
-        <Categories
-          nameFilter="Пол: "
-          categories={categoriesSex}
-          chooseCategory={(key) => this.updateFilter("sex", key)}
-        />
-        <Items
-          onShowItem={this.onShowItem}
-          items={this.state.currentItems}
-          onAdd={this.addToOrder}
-        />
-        {this.state.showFullItem && (
-          <ShowFullItem
-            onAdd={this.addToOrder}
-            onShowItem={this.onShowItem}
-            item={this.state.fullItem}
-          />
-        )}
-        <Footer />
-      </div>
-    );
-  }
-
-  onShowItem(item) {
-    this.setState({ fullItem: item });
-    this.setState({ showFullItem: !this.state.showFullItem });
-  }
-
-  updateFilter(type, value) {
-    this.setState(
-      (prevState) => ({
-        filters: {
-          ...prevState.filters,
-          [type]: value,
-        },
-      }),
-      this.applyFilters
-    );
-  }
-
-  applyFilters() {
-    const { items, filters } = this.state;
+  // Применение фильтров
+  const applyFilters = useCallback(() => {
     let filtered = items;
 
+    // Фильтрация по поисковому запросу
+    if (searchQuery) {
+      filtered = filtered.filter((el) =>
+        el.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Фильтрация по категориям
     if (filters.category !== "all") {
       filtered = filtered.filter((el) => el.category === filters.category);
     }
@@ -305,20 +258,62 @@ class App extends React.Component {
       filtered = filtered.filter((el) => el.sex === filters.sex);
     }
 
-    this.setState({ currentItems: filtered });
-  }
+    setCurrentItems(filtered);
+  }, [filters, items, searchQuery]); // Добавляем searchQuery в зависимости
 
-  deleteOrder(id) {
-    this.setState({ orders: this.state.orders.filter((el) => el.id !== id) });
-  }
+  // Эффект для применения фильтров
+  useEffect(() => {
+    applyFilters();
+  }, [filters, searchQuery, applyFilters]); // Добавляем searchQuery в зависимости
 
-  addToOrder(item) {
-    let isInArray = false;
-    this.state.orders.forEach((el) => {
-      if (el.id === item.id) isInArray = true;
-    });
-    if (!isInArray) this.setState({ orders: [...this.state.orders, item] });
-  }
-}
+  const onShowItem = (item) => {
+    setFullItem(item);
+    setShowFullItem((prev) => !prev);
+  };
+
+  const updateFilter = (type, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [type]: value,
+    }));
+  };
+
+  const deleteOrder = (id) => {
+    setOrders((prev) => prev.filter((el) => el.id !== id));
+  };
+
+  const addToOrder = (item) => {
+    const isInArray = orders.some((el) => el.id === item.id);
+    if (!isInArray) {
+      setOrders((prev) => [...prev, item]);
+    }
+  };
+
+  return (
+    <div className="wrapper">
+      <Header orders={orders} onDelete={deleteOrder} />
+      <SearchPanel searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <Categories
+        nameFilter="Тип одежды: "
+        categories={categoriesType}
+        chooseCategory={(key) => updateFilter("category", key)}
+      />
+      <Categories
+        nameFilter="Пол: "
+        categories={categoriesSex}
+        chooseCategory={(key) => updateFilter("sex", key)}
+      />
+      <Items onShowItem={onShowItem} items={currentItems} onAdd={addToOrder} />
+      {showFullItem && (
+        <ShowFullItem
+          onAdd={addToOrder}
+          onShowItem={onShowItem}
+          item={fullItem}
+        />
+      )}
+      <Footer />
+    </div>
+  );
+};
 
 export default App;
