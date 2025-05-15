@@ -1,6 +1,6 @@
 const SearchPanel = ({ searchQuery, setSearchQuery }) => {
   return (
-    <div className="search-panel">
+    <div className="search-panel" id="search-panel">
       <input
         type="text"
         placeholder="Поиск по названию..."

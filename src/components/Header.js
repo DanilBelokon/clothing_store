@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { VscAccount } from "react-icons/vsc";
-import ShowAutorized from "./ShowAutorized";
-import Order from "./Order";
+import ShowAutorized from "./headerComponent/ShowAutorized";
+import Order from "./headerComponent/Order";
+import ShowInfoUs from "./headerComponent/ShowInfoUs";
+import ShowIsContact from "./headerComponent/ShowIsContanct";
 
 const showOrders = (props) => {
   let summa = 0;
@@ -36,6 +38,8 @@ export default function Header(props) {
   const [cartOpen, setCartOpen] = useState(false);
   const [accOpen, setAccOpen] = useState(false);
   const loginFormRef = React.useRef(null);
+  const [isInfoUsOpen, setIsInfoUsOpen] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
 
   const handleClickOutside = (event) => {
     if (loginFormRef.current && !loginFormRef.current.contains(event.target)) {
@@ -69,9 +73,18 @@ export default function Header(props) {
       <div>
         <span className="logo">Магазин одежды</span>
         <ul className="nav">
-          <li>Про нас</li>
-          <li>Контакты</li>
-          <li>Полезные ссылки</li>
+          <li onClick={() => setIsInfoUsOpen(true)}>Про нас</li>
+          <li onClick={() => setIsContactOpen(true)}>Контакты</li>
+          <li
+            onClick={() => {
+              const searchPanel = document.getElementById("search-panel");
+              if (searchPanel) {
+                searchPanel.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+          >
+            Полезные ссылки
+          </li>
         </ul>
         <VscAccount
           onClick={() => setAccOpen(!accOpen)}
@@ -92,7 +105,13 @@ export default function Header(props) {
             {props.orders.length > 0 ? showOrders(props) : showNothing()}
           </div>
         )}
+        {isInfoUsOpen && (
+          <ShowInfoUs setIsInfoUsOpen={setIsInfoUsOpen}></ShowInfoUs>
+        )}
       </div>
+      {isContactOpen && (
+        <ShowIsContact setIsContactOpen={setIsContactOpen}></ShowIsContact>
+      )}
       <div className="presentation"></div>
     </header>
   );
