@@ -77,13 +77,13 @@ export default function Header(props) {
           <li onClick={() => setIsContactOpen(true)}>Контакты</li>
           <li
             onClick={() => {
-              const searchPanel = document.getElementById("search-panel");
+              const searchPanel = document.getElementById("style-test");
               if (searchPanel) {
                 searchPanel.scrollIntoView({ behavior: "smooth" });
               }
             }}
           >
-            Полезные ссылки
+            Посмотреть каталог
           </li>
         </ul>
         <VscAccount
