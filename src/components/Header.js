@@ -5,8 +5,9 @@ import ShowAutorized from "./headerComponent/ShowAutorized";
 import Order from "./headerComponent/Order";
 import ShowInfoUs from "./headerComponent/ShowInfoUs";
 import ShowIsContact from "./headerComponent/ShowIsContanct";
+import ShowProcessOrder from "./headerComponent/showProcessOrder/ShowProcessOrder";
 
-const showOrders = (props) => {
+const showOrders = (props, setProcessOrderOpen) => {
   let summa = 0;
   let sumPrice = 0;
   props.orders.forEach((el) => {
@@ -21,7 +22,7 @@ const showOrders = (props) => {
       ))}
       <p className="summa">Количество товаров: {summa}</p>
       <p className="summa-price">Общая цена: {formattedSum}$</p>
-      <button>Оформить заказ</button>
+      <button onClick={() => setProcessOrderOpen(true)}>Оформить заказ</button>
     </div>
   );
 };
@@ -40,6 +41,7 @@ export default function Header(props) {
   const loginFormRef = React.useRef(null);
   const [isInfoUsOpen, setIsInfoUsOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isProcessOrderOpen, setProcessOrderOpen] = useState(false);
 
   const handleClickOutside = (event) => {
     if (loginFormRef.current && !loginFormRef.current.contains(event.target)) {
@@ -102,7 +104,9 @@ export default function Header(props) {
         )}
         {cartOpen && (
           <div className="shop-cart">
-            {props.orders.length > 0 ? showOrders(props) : showNothing()}
+            {props.orders.length > 0
+              ? showOrders(props, setProcessOrderOpen)
+              : showNothing()}
           </div>
         )}
         {isInfoUsOpen && (
@@ -112,6 +116,11 @@ export default function Header(props) {
       {isContactOpen && (
         <ShowIsContact setIsContactOpen={setIsContactOpen}></ShowIsContact>
       )}
+      <ShowProcessOrder
+        isOpen={isProcessOrderOpen}
+        onClose={() => setProcessOrderOpen(false)}
+        cartItems={props.orders}
+      />
       <div className="presentation"></div>
     </header>
   );
