@@ -1,10 +1,31 @@
 .style-test-container {
-  margin-bottom: 20px;
   padding: 10px;
-  background: #f5f5f5;
+
   display: flex;
   gap: 10px;
   align-items: center;
+}
+
+.style-test-wrapper {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  padding: 30px;
+  border-radius: 10px;
+  color: white;
+  margin: 20px 0;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .style-test-button {
@@ -14,7 +35,7 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   transition: background-color 0.3s;
 }
 
@@ -56,8 +77,9 @@
   border-color: silver;
   transform: scale(1.1);
 }
-span {
+.style-test-wrapper span {
   margin-right: 10px;
+  font-size: 16px;
 }
 
 .modal-overlay {
@@ -142,12 +164,12 @@ span {
 }
 
 .apply-button {
-  background: #5cb85c;
+  background: #af0000;
   color: white;
 }
 
 .apply-button:hover {
-  background: #4cae4c;
+  background: #820000;
 }
 
 .close-button {
@@ -170,8 +192,10 @@ span {
   padding: 0 5px;
 }
 
-h2 {
+.style-test-wrapper h2 {
+  font-weight: 500;
   padding-left: 10px;
-  margin-bottom: 20px;
-  color: #393939;
+  margin-bottom: 25px;
+  color: #ffffff;
+  font-size: 20px;
 }

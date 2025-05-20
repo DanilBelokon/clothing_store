@@ -11,8 +11,8 @@ function Item(props) {
       <p>{props.item.color_car}</p>
       <p>{props.item.number_car}</p>
       <b>{props.item.price}</b>
-      <div className="add-to-cart" onClick={() => props.onAdd(props.item)}>
-        +
+      <div className="add-to-cart" onClick={() => props.onShowItem(props.item)}>
+        »
       </div>
     </div>
   );

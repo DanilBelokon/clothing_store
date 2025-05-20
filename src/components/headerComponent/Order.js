@@ -5,7 +5,11 @@ function Order(props) {
     <div className="item">
       <img src={"./img/" + props.item.img} alt="" />
       <h2>{props.item.title}</h2>
+
       <b>{props.item.price}</b>
+      {props.item.selectedSize && (
+        <b className="selected-size">Размер: {props.item.selectedSize}</b>
+      )}
       <FaTrash
         className="delete-icon"
         onClick={() => props.onDelete(props.item.id)}

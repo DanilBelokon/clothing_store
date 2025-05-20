@@ -53,17 +53,13 @@ const StyleTest = ({
   };
 
   return (
-    <div className="style-test-wrapper">
+    <div className="style-test-wrapper" id="style-test">
       <h2>
         Не можете найти себе подходящую вещь? Пройдите тест и система
         отфильтрует каталог под вас!
       </h2>
       <div className="style-test-container">
-        <button
-          onClick={startTest}
-          className="style-test-button"
-          id="style-test"
-        >
+        <button onClick={startTest} className="style-test-button">
           Определить ваш стиль
         </button>
 
@@ -128,7 +124,9 @@ const StyleTest = ({
                 </>
               ) : (
                 <>
-                  <h2>Ваш стиль: {testResult.title}</h2>
+                  <h3 className="result-title">
+                    Ваш стиль: {testResult.title}
+                  </h3>
                   <p>{testResult.description}</p>
                   <div className="modal-buttons">
                     <button

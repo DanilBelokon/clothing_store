@@ -1,4 +1,20 @@
+import React, { useState } from "react";
+
 function ShowFullItem(props) {
+  const [selectedSize, setSelectedSize] = useState(null);
+
+  const handleSizeClick = (size) => {
+    setSelectedSize(size);
+  };
+
+  const handleAddToCart = () => {
+    if (!selectedSize) {
+      alert("Пожалуйста, выберите размер");
+      return;
+    }
+    props.onAdd({ ...props.item, selectedSize });
+  };
+
   return (
     <div className="full-item">
       <div>
@@ -36,24 +52,36 @@ function ShowFullItem(props) {
         <p>Страна производитель: {props.item.country}</p>
         <p>Материалы: {props.item.materials}</p>
         <b>Цена: {props.item.price}</b>
-        <div className="add-to-cart" onClick={() => props.onAdd(props.item)}>
-          +
-        </div>
+
         <div className="size-selector">
           <h3>Доступные размеры:</h3>
           <div className="size-buttons">
             {props.item.sizes.map((size) => (
               <button
                 key={size}
-                className="size-button"
-                onClick={() => console.log(`Выбран размер: ${size}`)}
+                className={`size-button ${
+                  selectedSize === size ? "selected" : ""
+                }`}
+                onClick={() => handleSizeClick(size)}
               >
                 {size}
               </button>
             ))}
           </div>
         </div>
+
+        <div
+          className="add-to-cart"
+          onClick={handleAddToCart}
+          style={{ cursor: "pointer" }}
+        >
+          +
+        </div>
         <div className="add-text-order">Добавить в корзину</div>
+
+        {selectedSize && (
+          <p style={{ marginTop: "10px" }}>Выбран размер: {selectedSize}</p>
+        )}
       </div>
     </div>
   );
