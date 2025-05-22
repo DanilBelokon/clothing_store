@@ -1,4 +1,5 @@
 function Item(props) {
+  console.log(props.item.shortDesc);
   return (
     <div className="item">
       <img
@@ -7,9 +8,9 @@ function Item(props) {
         alt=""
       />
       <h2>{props.item.title}</h2>
-      <p>{props.item.shortDesc}</p>
-      <p>{props.item.color_car}</p>
-      <p>{props.item.number_car}</p>
+      <p>{props.item.short_desc}</p>
+      <p>{props.item.color}</p>
+      <p>{props.item.number}</p>
       <b>{props.item.price}</b>
       <div className="add-to-cart" onClick={() => props.onShowItem(props.item)}>
         »

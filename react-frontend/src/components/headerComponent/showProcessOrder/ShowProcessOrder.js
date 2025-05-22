@@ -94,14 +94,14 @@ const ShowProcessOrder = ({ isOpen, onClose, cartItems }) => {
                       × {quantity} шт.
                     </span>
                     <span className="order-modal__item-price">
-                      {(price * quantity).toFixed(2)}$
+                      {(price * quantity).toFixed(2)}₽
                     </span>
                   </li>
                 );
               })}
             </ul>
             <div className="order-modal__total">
-              Итого: <span>{totalSum.toFixed(2)}$</span>
+              Итого: <span>{totalSum.toFixed(2)}₽</span>
             </div>
           </div>
 

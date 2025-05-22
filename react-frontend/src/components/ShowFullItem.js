@@ -39,9 +39,9 @@ function ShowFullItem(props) {
           alt=""
         />
         <h2>{props.item.title}</h2>
-        <p>{props.item.fullDesc}</p>
-        <p>{props.item.color_car}</p>
-        <p>{props.item.number_car}</p>
+        <p>{props.item.full_desc}</p>
+        <p>{props.item.color}</p>
+        <p>{props.item.number}</p>
         <p>
           {props.item.sex === "Man"
             ? "Пол: Мужской"
@@ -56,7 +56,10 @@ function ShowFullItem(props) {
         <div className="size-selector">
           <h3>Доступные размеры:</h3>
           <div className="size-buttons">
-            {props.item.sizes.map((size) => (
+            {(Array.isArray(props.item.sizes)
+              ? props.item.sizes
+              : JSON.parse(props.item.sizes)
+            ).map((size) => (
               <button
                 key={size}
                 className={`size-button ${

@@ -5,16 +5,13 @@ import Items from "./components/Items";
 import Categories from "./components/Categories";
 import ShowFullItem from "./components/ShowFullItem";
 import SearchPanel from "./components/SearchPanel";
-import categoriesType from "./data/categoriesType";
-import categoriesSex from "./data/categoriesSex";
-import itemsData from "./data/itemsData";
 import StyleTest from "./components/styleTest/StyleTest";
 import { results } from "./data/result";
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [orders, setOrders] = useState([]);
-  const [items, setItems] = useState(itemsData); // eslint-disable-line no-unused-vars
+  const [items, setItems] = useState([]);
   const [filters, setFilters] = useState({
     category: "all",
     sex: "all",
@@ -25,6 +22,37 @@ const App = () => {
   const [styleFilterActive, setStyleFilterActive] = useState(false);
   const [styleFilterResult, setStyleFilterResult] = useState(null);
   const [filteredByStyleItems, setFilteredByStyleItems] = useState([]);
+  const [categoriesSex, setCategoriesSex] = useState([]);
+  const [categoriesType, setCategoriesType] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/getCategoriesType.php")
+      .then((res) => res.json())
+      .then((data) => setCategoriesType(data))
+      .catch((err) =>
+        console.error("Ошибка при получении типов категорий:", err)
+      );
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/getCategoriesSex.php")
+      .then((res) => res.json())
+      .then((data) => setCategoriesSex(data))
+      .catch((err) => console.error("Ошибка при получении категорий:", err));
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/getItems.php")
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/getItems.php")
+      .then((res) => res.json())
+      .then((data) => setItems(data))
+      .catch((err) => console.error("Ошибка при получении:", err));
+  }, []);
 
   // Инициализация текущих товаров
   useEffect(() => {
@@ -32,7 +60,7 @@ const App = () => {
   }, [items]);
 
   const applyStyleFilter = (recommendedItems) => {
-    const filteredItems = itemsData.filter((item) =>
+    const filteredItems = items.filter((item) =>
       recommendedItems.includes(item.id)
     );
     setFilteredByStyleItems(filteredItems);

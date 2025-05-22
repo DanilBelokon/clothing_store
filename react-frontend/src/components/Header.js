@@ -6,6 +6,7 @@ import Order from "./headerComponent/Order";
 import ShowInfoUs from "./headerComponent/ShowInfoUs";
 import ShowIsContact from "./headerComponent/ShowIsContanct";
 import ShowProcessOrder from "./headerComponent/showProcessOrder/ShowProcessOrder";
+import ShowProfile from "./headerComponent/showProfile/ShowProfile";
 
 const showOrders = (props, setProcessOrderOpen) => {
   let summa = 0;
@@ -21,7 +22,7 @@ const showOrders = (props, setProcessOrderOpen) => {
         <Order onDelete={props.onDelete} key={el.id} item={el} />
       ))}
       <p className="summa">Количество товаров: {summa}</p>
-      <p className="summa-price">Общая цена: {formattedSum}$</p>
+      <p className="summa-price">Общая цена: {formattedSum}₽</p>
       <button onClick={() => setProcessOrderOpen(true)}>Оформить заказ</button>
     </div>
   );
@@ -42,6 +43,18 @@ export default function Header(props) {
   const [isInfoUsOpen, setIsInfoUsOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isProcessOrderOpen, setProcessOrderOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch {
+        localStorage.removeItem("user");
+      }
+    }
+  }, []);
 
   const handleClickOutside = (event) => {
     if (loginFormRef.current && !loginFormRef.current.contains(event.target)) {
@@ -93,15 +106,25 @@ export default function Header(props) {
           className={`acc-cart-button ${accOpen && "active"}`}
         />
         <span className="AuthSpan" onClick={() => setAccOpen(!accOpen)}>
-          Авторизуйтесь
+          {user ? user.username : "Авторизуйтесь"}
         </span>
         <FaShoppingCart
           onClick={() => setCartOpen(!cartOpen)}
           className={`shop-cart-button ${cartOpen && "active"}`}
         />
-        {accOpen && (
-          <ShowAutorized ref={loginFormRef} onClose={() => setAccOpen(false)} />
-        )}
+        {accOpen &&
+          (user ? (
+            <ShowProfile
+              ref={loginFormRef}
+              user={user}
+              onClose={() => setAccOpen(false)}
+            />
+          ) : (
+            <ShowAutorized
+              ref={loginFormRef}
+              onClose={() => setAccOpen(false)}
+            />
+          ))}
         {cartOpen && (
           <div className="shop-cart">
             {props.orders.length > 0
