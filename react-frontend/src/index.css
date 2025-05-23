@@ -112,6 +112,36 @@ header .shop-cart .item b {
   font-weight: 600;
 }
 
+header .shop-cart .item .quantity-minus {
+  color: #ca5252;
+  position: absolute;
+  right: 50px;
+  transform: translateY(-5px);
+  font-size: 26px;
+  cursor: pointer;
+  transition: color, transform 500ms ease;
+}
+
+header .shop-cart .item .quantity-plus {
+  color: #ca5252;
+  position: absolute;
+  right: 20px;
+  transform: translateY(-5px);
+  font-size: 26px;
+  cursor: pointer;
+  transition: color, transform 500ms ease;
+}
+
+header .shop-cart .item .quantity-minus:hover {
+  color: red;
+  transform: scale(1.1);
+}
+
+header .shop-cart .item .quantity-plus:hover {
+  color: red;
+  transform: scale(1.1);
+}
+
 header .shop-cart .item .delete-icon {
   color: #ca5252;
   float: right;

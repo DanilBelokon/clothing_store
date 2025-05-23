@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { addToCart } from "../api/cart";
+import { getCart } from "../api/cart";
 
 function ShowFullItem(props) {
   const [selectedSize, setSelectedSize] = useState(null);
@@ -7,12 +9,31 @@ function ShowFullItem(props) {
     setSelectedSize(size);
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!selectedSize) {
       alert("Пожалуйста, выберите размер");
       return;
     }
-    props.onAdd({ ...props.item, selectedSize });
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      alert("Пожалуйста, авторизуйтесь, чтобы добавить в корзину");
+      return;
+    }
+
+    try {
+      const response = await addToCart(user.id, props.item.id, selectedSize);
+      if (response.success) {
+        alert("Товар добавлен в корзину");
+        // Запрашиваем обновленную корзину с сервера
+        const updatedCart = await getCart(user.id);
+        props.setOrders(updatedCart);
+      } else {
+        alert("Ошибка: " + response.error);
+      }
+    } catch (err) {
+      console.error("Ошибка при добавлении в корзину", err);
+    }
   };
 
   return (

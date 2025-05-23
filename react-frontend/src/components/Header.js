@@ -7,19 +7,31 @@ import ShowInfoUs from "./headerComponent/ShowInfoUs";
 import ShowIsContact from "./headerComponent/ShowIsContanct";
 import ShowProcessOrder from "./headerComponent/showProcessOrder/ShowProcessOrder";
 import ShowProfile from "./headerComponent/showProfile/ShowProfile";
+import { getCart } from "../api/cart";
+import { updateQuantity } from "../api/cart";
 
-const showOrders = (props, setProcessOrderOpen) => {
+const showOrders = (
+  orders,
+  onDelete,
+  setProcessOrderOpen,
+  handleQuantityChange
+) => {
   let summa = 0;
   let sumPrice = 0;
-  props.orders.forEach((el) => {
+  orders.forEach((el) => {
     summa += 1;
     sumPrice += parseFloat(el.price.replace(/[^\d.]/g, ""));
   });
   const formattedSum = sumPrice.toFixed(2);
   return (
     <div>
-      {props.orders.map((el) => (
-        <Order onDelete={props.onDelete} key={el.id} item={el} />
+      {orders.map((el) => (
+        <Order
+          onDelete={onDelete}
+          key={el.id}
+          item={el}
+          handleQuantityChange={handleQuantityChange}
+        />
       ))}
       <p className="summa">Количество товаров: {summa}</p>
       <p className="summa-price">Общая цена: {formattedSum}₽</p>
@@ -36,7 +48,7 @@ const showNothing = () => {
   );
 };
 
-export default function Header(props) {
+export default function Header({ orders, onDelete, setOrders }) {
   const [cartOpen, setCartOpen] = useState(false);
   const [accOpen, setAccOpen] = useState(false);
   const loginFormRef = React.useRef(null);
@@ -48,13 +60,16 @@ export default function Header(props) {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch {
-        localStorage.removeItem("user");
-      }
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+
+      getCart(parsedUser.id)
+        .then((cartItems) => {
+          setOrders(cartItems);
+        })
+        .catch((err) => console.error("Ошибка загрузки корзины:", err));
     }
-  }, []);
+  }, [setOrders]);
 
   const handleClickOutside = (event) => {
     if (loginFormRef.current && !loginFormRef.current.contains(event.target)) {
@@ -82,6 +97,19 @@ export default function Header(props) {
       document.removeEventListener("keydown", handleEscape);
     };
   }, [accOpen]);
+
+  const handleQuantityChange = async (cartId, newQuantity) => {
+    if (newQuantity > 0) {
+      const res = await updateQuantity(cartId, newQuantity);
+      if (res.success) {
+        setOrders((prev) =>
+          prev.map((el) =>
+            el.id === cartId ? { ...el, quantity: newQuantity } : el
+          )
+        );
+      }
+    }
+  };
 
   return (
     <header>
@@ -127,8 +155,13 @@ export default function Header(props) {
           ))}
         {cartOpen && (
           <div className="shop-cart">
-            {props.orders.length > 0
-              ? showOrders(props, setProcessOrderOpen)
+            {orders.length > 0
+              ? showOrders(
+                  orders,
+                  onDelete,
+                  setProcessOrderOpen,
+                  handleQuantityChange
+                )
               : showNothing()}
           </div>
         )}
@@ -142,7 +175,7 @@ export default function Header(props) {
       <ShowProcessOrder
         isOpen={isProcessOrderOpen}
         onClose={() => setProcessOrderOpen(false)}
-        cartItems={props.orders}
+        cartItems={orders}
       />
       <div className="presentation"></div>
     </header>

@@ -1,5 +1,4 @@
 function Item(props) {
-  console.log(props.item.shortDesc);
   return (
     <div className="item">
       <img

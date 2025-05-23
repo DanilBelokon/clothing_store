@@ -7,6 +7,7 @@ import ShowFullItem from "./components/ShowFullItem";
 import SearchPanel from "./components/SearchPanel";
 import StyleTest from "./components/styleTest/StyleTest";
 import { results } from "./data/result";
+import { removeFromCart } from "./api/cart";
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -41,11 +42,11 @@ const App = () => {
       .catch((err) => console.error("Ошибка при получении категорий:", err));
   }, []);
 
-  useEffect(() => {
-    fetch("http://localhost:8000/getItems.php")
-      .then((res) => res.json())
-      .then((data) => console.log(data));
-  }, []);
+  // useEffect(() => {
+  //   fetch("http://localhost:8000/getItems.php")
+  //     .then((res) => res.json())
+  //     .then((data) => console.log(data));
+  // }, []);
 
   useEffect(() => {
     fetch("http://localhost:8000/getItems.php")
@@ -131,20 +132,22 @@ const App = () => {
     }));
   };
 
-  const deleteOrder = (id) => {
-    setOrders((prev) => prev.filter((el) => el.id !== id));
-  };
-
-  const addToOrder = (item) => {
-    const isInArray = orders.some((el) => el.id === item.id);
-    if (!isInArray) {
-      setOrders((prev) => [...prev, item]);
+  const deleteOrder = async (cartId) => {
+    try {
+      const res = await removeFromCart(cartId);
+      if (res.success) {
+        setOrders((prev) => prev.filter((el) => el.id !== cartId));
+      } else {
+        console.error("Ошибка при удалении:", res.error);
+      }
+    } catch (err) {
+      console.error("Ошибка запроса:", err);
     }
   };
 
   return (
     <div className="wrapper">
-      <Header orders={orders} onDelete={deleteOrder} />
+      <Header orders={orders} onDelete={deleteOrder} setOrders={setOrders} />
       <StyleTest
         onApplyFilter={applyStyleFilter}
         onResetFilter={resetStyleFilter}
@@ -163,12 +166,12 @@ const App = () => {
         categories={categoriesSex}
         chooseCategory={(key) => updateFilter("sex", key)}
       />
-      <Items onShowItem={onShowItem} items={currentItems} onAdd={addToOrder} />
+      <Items onShowItem={onShowItem} items={currentItems} />
       {showFullItem && (
         <ShowFullItem
-          onAdd={addToOrder}
           onShowItem={onShowItem}
           item={fullItem}
+          setOrders={setOrders} // Добавьте это, если используете второй вариант
         />
       )}
       <Footer />
