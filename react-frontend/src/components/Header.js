@@ -19,8 +19,8 @@ const showOrders = (
   let summa = 0;
   let sumPrice = 0;
   orders.forEach((el) => {
-    summa += 1;
-    sumPrice += parseFloat(el.price.replace(/[^\d.]/g, ""));
+    summa += el.quantity;
+    sumPrice += el.quantity * parseFloat(el.price.replace(/[^\d.]/g, ""));
   });
   const formattedSum = sumPrice.toFixed(2);
   return (
