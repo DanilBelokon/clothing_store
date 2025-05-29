@@ -113,7 +113,9 @@
 
 /* Общие стили для обеих кнопок */
 .order-modal__submit-btn,
-.order-modal__submit-btn-ymoney {
+.order-modal__submit-btn-ymoney,
+.order-modal__submit-btn-ok,
+.order-modal__submit-btn-return {
   flex: 1; /* Равная ширина */
   max-width: 250px; /* Максимальная ширина */
   padding: 12px;
@@ -128,6 +130,14 @@
 /* Индивидуальные стили */
 .order-modal__submit-btn {
   background: #25d366;
+}
+
+.order-modal__submit-btn-ok {
+  background: #bb0000;
+}
+
+.order-modal__submit-btn-return {
+  background: #bb9200;
 }
 
 .order-modal__submit-btn-ymoney {

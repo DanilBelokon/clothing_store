@@ -2,7 +2,13 @@ import { useState, useEffect } from "react";
 import "./style.css";
 import PaymentConfirmationModal from "../PaymentConfirmationModal";
 
-const ShowProcessOrder = ({ isOpen, onClose, cartItems, setOrders }) => {
+const ShowProcessOrder = ({
+  isOpen,
+  onClose,
+  cartItems,
+  setOrders,
+  setOrdersHistory,
+}) => {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -33,7 +39,20 @@ const ShowProcessOrder = ({ isOpen, onClose, cartItems, setOrders }) => {
       const user = JSON.parse(storedUser);
       setFormData((prev) => ({ ...prev, userId: user.id }));
     }
+
+    const savedFormData = localStorage.getItem("checkoutFormData");
+    if (savedFormData) {
+      setFormData((prev) => ({
+        ...prev,
+        ...JSON.parse(savedFormData),
+      }));
+    }
+
+    if (localStorage.getItem("awaitingPaymentConfirmation") === "true") {
+      setShowConfirm(true);
+    }
   }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -82,6 +101,8 @@ const ShowProcessOrder = ({ isOpen, onClose, cartItems, setOrders }) => {
     if (paymentType === "whatsapp") {
       const encodedMessage = encodeURIComponent(message);
       window.open(`https://wa.me/79529794890?text=${encodedMessage}`, "_blank");
+      localStorage.setItem("awaitingPaymentConfirmation", "true");
+      localStorage.setItem("checkoutFormData", JSON.stringify(formData));
       setShowConfirm(true);
     } else if (paymentType === "ymoney") {
       window.open(
@@ -90,6 +111,8 @@ const ShowProcessOrder = ({ isOpen, onClose, cartItems, setOrders }) => {
           `&sum=${totalSum}&label=ORDER_${Date.now()}`,
         "_blank"
       );
+      localStorage.setItem("awaitingPaymentConfirmation", "true");
+      localStorage.setItem("checkoutFormData", JSON.stringify(formData));
       setShowConfirm(true);
     }
   };
@@ -231,7 +254,7 @@ const ShowProcessOrder = ({ isOpen, onClose, cartItems, setOrders }) => {
         onConfirm={async () => {
           try {
             const response = await fetch(
-              "http://localhost:8000/create_order.php",
+              "http://localhost:8000/createOrder.php",
               {
                 method: "POST",
                 headers: {
@@ -249,7 +272,7 @@ const ShowProcessOrder = ({ isOpen, onClose, cartItems, setOrders }) => {
             console.log(formData.userId);
             if (result.success) {
               await fetch(
-                `http://localhost:8000/clear_cart.php?user_id=${formData.userId}`,
+                `http://localhost:8000/clearCart.php?user_id=${formData.userId}`,
                 {
                   method: "POST",
                 }
@@ -263,6 +286,20 @@ const ShowProcessOrder = ({ isOpen, onClose, cartItems, setOrders }) => {
               }
               resetState();
             }
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (!user) return;
+
+            fetch("http://localhost:8000/getOrders.php", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ user_id: user.id }),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.success) setOrdersHistory(data.orders);
+                else alert("Ошибка: " + data.error);
+              })
+              .catch((err) => alert("Сетевая ошибка: " + err.message));
           } catch (error) {
             alert("Сетевая ошибка: " + error.message);
           }

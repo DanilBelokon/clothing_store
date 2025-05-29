@@ -42,12 +42,6 @@ const App = () => {
       .catch((err) => console.error("Ошибка при получении категорий:", err));
   }, []);
 
-  // useEffect(() => {
-  //   fetch("http://localhost:8000/getItems.php")
-  //     .then((res) => res.json())
-  //     .then((data) => console.log(data));
-  // }, []);
-
   useEffect(() => {
     fetch("http://localhost:8000/getItems.php")
       .then((res) => res.json())

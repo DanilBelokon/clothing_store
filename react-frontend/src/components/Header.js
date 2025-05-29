@@ -10,6 +10,7 @@ import ShowProcessOrder from "./headerComponent/showProcessOrder/ShowProcessOrde
 import ShowProfile from "./headerComponent/showProfile/ShowProfile";
 import { getCart } from "../api/cart";
 import { updateQuantity } from "../api/cart";
+import ShowHistory from "./showHistory/ShowHistory";
 
 const showOrders = (
   orders,
@@ -51,7 +52,9 @@ const showNothing = () => {
 
 export default function Header({ orders, onDelete, setOrders }) {
   const [cartOpen, setCartOpen] = useState(false);
+  const [ordersHistory, setOrdersHistory] = useState([]);
   const [accOpen, setAccOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const loginFormRef = React.useRef(null);
   const [isInfoUsOpen, setIsInfoUsOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -71,6 +74,27 @@ export default function Header({ orders, onDelete, setOrders }) {
         .catch((err) => console.error("Ошибка загрузки корзины:", err));
     }
   }, [setOrders]);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) return;
+
+    fetch("http://localhost:8000/getOrders.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: user.id }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) setOrdersHistory(data.orders);
+        else alert("Ошибка: " + data.error);
+      })
+      .catch((err) => alert("Сетевая ошибка: " + err.message));
+
+    if (localStorage.getItem("awaitingPaymentConfirmation") === "true") {
+      setProcessOrderOpen(true);
+    }
+  }, []);
 
   const handleClickOutside = (event) => {
     if (loginFormRef.current && !loginFormRef.current.contains(event.target)) {
@@ -144,9 +168,21 @@ export default function Header({ orders, onDelete, setOrders }) {
           className={`shop-cart-button ${cartOpen && "active"}`}
         />
         <MdOutlineHistory
-          className={`history-cart-button ${cartOpen && "active"}`}
+          onClick={() => setHistoryOpen(!historyOpen)}
+          className={`history-cart-button ${historyOpen && "active"}`}
         ></MdOutlineHistory>
-        <span className="historySpan">История заказов</span>
+        <span
+          onClick={() => setHistoryOpen(!historyOpen)}
+          className="historySpan"
+        >
+          История заказов
+        </span>
+        {historyOpen && (
+          <ShowHistory
+            orders={ordersHistory}
+            onClose={() => setHistoryOpen(false)}
+          ></ShowHistory>
+        )}
         {accOpen &&
           (user ? (
             <ShowProfile
@@ -184,6 +220,7 @@ export default function Header({ orders, onDelete, setOrders }) {
         onClose={() => setProcessOrderOpen(false)}
         cartItems={orders}
         setOrders={setOrders}
+        setOrdersHistory={setOrdersHistory}
       />
       <div className="presentation"></div>
     </header>

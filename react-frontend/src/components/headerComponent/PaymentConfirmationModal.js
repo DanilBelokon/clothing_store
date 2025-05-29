@@ -9,10 +9,24 @@ const PaymentConfirmationModal = ({ isVisible, onClose, onConfirm }) => {
           Оплата прошла успешно?
         </p>
         <div className="order-modal__buttons-container">
-          <button className="order-modal__submit-btn" onClick={onConfirm}>
+          <button
+            className="order-modal__submit-btn-ok"
+            onClick={() => {
+              localStorage.removeItem("awaitingPaymentConfirmation");
+              localStorage.removeItem("checkoutFormData");
+              onConfirm();
+            }}
+          >
             Завершить заказ
           </button>
-          <button className="order-modal__submit-btn-ymoney" onClick={onClose}>
+          <button
+            className="order-modal__submit-btn-return"
+            onClick={() => {
+              localStorage.removeItem("awaitingPaymentConfirmation");
+              localStorage.removeItem("checkoutFormData");
+              onClose();
+            }}
+          >
             Вернуться к оформлению
           </button>
         </div>

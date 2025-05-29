@@ -86,6 +86,12 @@ header .history-cart-button.active {
 .historySpan {
   float: center;
   margin-left: 10px;
+  cursor: pointer;
+  transition: opacity 500ms ease;
+}
+
+.historySpan:hover {
+  opacity: 0.5;
 }
 
 header .shop-cart {
@@ -97,7 +103,7 @@ header .shop-cart {
   -webkit-box-shadow: 5px 4px 19px 0px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 5px 4px 19px 0px rgba(0, 0, 0, 0.2);
   box-shadow: 5px 4px 19px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  z-index: 800;
   padding: 20px;
   padding-bottom: 0px;
 }
