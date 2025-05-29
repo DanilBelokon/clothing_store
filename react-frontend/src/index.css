@@ -69,6 +69,25 @@ header .acc-cart-button.active {
   transform: scale(2);
 }
 
+header .history-cart-button {
+  float: center;
+  margin-left: 40px;
+  transform: scale(1.5);
+  cursor: pointer;
+  transition: color, transform 500ms ease;
+}
+
+header .history-cart-button:hover,
+header .history-cart-button.active {
+  color: #dc3d3d;
+  transform: scale(2);
+}
+
+.historySpan {
+  float: center;
+  margin-left: 10px;
+}
+
 header .shop-cart {
   position: absolute;
   top: 30px;

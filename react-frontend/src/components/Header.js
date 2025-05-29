@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { VscAccount } from "react-icons/vsc";
+import { MdOutlineHistory } from "react-icons/md";
 import ShowAutorized from "./headerComponent/ShowAutorized";
 import Order from "./headerComponent/Order";
 import ShowInfoUs from "./headerComponent/ShowInfoUs";
@@ -133,13 +134,19 @@ export default function Header({ orders, onDelete, setOrders }) {
           onClick={() => setAccOpen(!accOpen)}
           className={`acc-cart-button ${accOpen && "active"}`}
         />
+
         <span className="AuthSpan" onClick={() => setAccOpen(!accOpen)}>
           {user ? user.username : "Авторизуйтесь"}
         </span>
+
         <FaShoppingCart
           onClick={() => setCartOpen(!cartOpen)}
           className={`shop-cart-button ${cartOpen && "active"}`}
         />
+        <MdOutlineHistory
+          className={`history-cart-button ${cartOpen && "active"}`}
+        ></MdOutlineHistory>
+        <span className="historySpan">История заказов</span>
         {accOpen &&
           (user ? (
             <ShowProfile
@@ -176,6 +183,7 @@ export default function Header({ orders, onDelete, setOrders }) {
         isOpen={isProcessOrderOpen}
         onClose={() => setProcessOrderOpen(false)}
         cartItems={orders}
+        setOrders={setOrders}
       />
       <div className="presentation"></div>
     </header>

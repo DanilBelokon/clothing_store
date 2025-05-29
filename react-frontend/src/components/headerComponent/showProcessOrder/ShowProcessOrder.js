@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./style.css";
+import PaymentConfirmationModal from "../PaymentConfirmationModal";
 
-const ShowProcessOrder = ({ isOpen, onClose, cartItems }) => {
+const ShowProcessOrder = ({ isOpen, onClose, cartItems, setOrders }) => {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -10,7 +11,29 @@ const ShowProcessOrder = ({ isOpen, onClose, cartItems }) => {
     comment: "",
   });
   const [errors, setErrors] = useState({});
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [selectedPaymentType, setSelectedPaymentType] = useState(null);
 
+  const resetState = () => {
+    setFormData({
+      name: "",
+      phone: "",
+      email: "",
+      address: "",
+      comment: "",
+      userId: formData.userId,
+    });
+    setErrors({});
+    setSelectedPaymentType(null);
+  };
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setFormData((prev) => ({ ...prev, userId: user.id }));
+    }
+  }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -40,6 +63,8 @@ const ShowProcessOrder = ({ isOpen, onClose, cartItems }) => {
       return; // Остановка если есть ошибки
     }
 
+    setSelectedPaymentType(paymentType);
+
     const itemsText = cartItems
       .map(
         (item) => `${item.title} (${item.price}) × ${item.quantity || 1} шт.`
@@ -57,6 +82,7 @@ const ShowProcessOrder = ({ isOpen, onClose, cartItems }) => {
     if (paymentType === "whatsapp") {
       const encodedMessage = encodeURIComponent(message);
       window.open(`https://wa.me/79529794890?text=${encodedMessage}`, "_blank");
+      setShowConfirm(true);
     } else if (paymentType === "ymoney") {
       window.open(
         `https://yoomoney.ru/quickpay/confirm?receiver=4100119150612930` +
@@ -64,6 +90,7 @@ const ShowProcessOrder = ({ isOpen, onClose, cartItems }) => {
           `&sum=${totalSum}&label=ORDER_${Date.now()}`,
         "_blank"
       );
+      setShowConfirm(true);
     }
   };
 
@@ -198,6 +225,49 @@ const ShowProcessOrder = ({ isOpen, onClose, cartItems }) => {
           </form>
         </div>
       </div>
+      <PaymentConfirmationModal
+        isVisible={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={async () => {
+          try {
+            const response = await fetch(
+              "http://localhost:8000/create_order.php",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  formData,
+                  cartItems,
+                  paymentType: selectedPaymentType, // или "whatsapp", если нужно
+                }),
+              }
+            );
+
+            const result = await response.json();
+            console.log(formData.userId);
+            if (result.success) {
+              await fetch(
+                `http://localhost:8000/clear_cart.php?user_id=${formData.userId}`,
+                {
+                  method: "POST",
+                }
+              );
+
+              alert("Спасибо за заказ!");
+              onClose();
+              setShowConfirm(false);
+              if (typeof setOrders === "function") {
+                setOrders([]);
+              }
+              resetState();
+            }
+          } catch (error) {
+            alert("Сетевая ошибка: " + error.message);
+          }
+        }}
+      />
     </div>
   );
 };
