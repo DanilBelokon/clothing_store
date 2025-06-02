@@ -24,7 +24,7 @@ try {
 
     $user_id = $data['user_id'];
 
-    // Получаем заказы пользователя
+
     $ordersStmt = $pdo->prepare("SELECT * FROM orders WHERE user_id = :user_id ORDER BY created_at DESC");
     $ordersStmt->execute(['user_id' => $user_id]);
     $orders = $ordersStmt->fetchAll(PDO::FETCH_ASSOC);

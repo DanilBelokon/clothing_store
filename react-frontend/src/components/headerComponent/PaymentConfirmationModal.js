@@ -14,6 +14,7 @@ const PaymentConfirmationModal = ({ isVisible, onClose, onConfirm }) => {
             onClick={() => {
               localStorage.removeItem("awaitingPaymentConfirmation");
               localStorage.removeItem("checkoutFormData");
+              localStorage.removeItem("selectedPaymentType");
               onConfirm();
             }}
           >
@@ -24,6 +25,7 @@ const PaymentConfirmationModal = ({ isVisible, onClose, onConfirm }) => {
             onClick={() => {
               localStorage.removeItem("awaitingPaymentConfirmation");
               localStorage.removeItem("checkoutFormData");
+              localStorage.removeItem("selectedPaymentType");
               onClose();
             }}
           >

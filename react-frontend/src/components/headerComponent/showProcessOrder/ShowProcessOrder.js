@@ -40,6 +40,11 @@ const ShowProcessOrder = ({
       setFormData((prev) => ({ ...prev, userId: user.id }));
     }
 
+    const storedPaymentType = localStorage.getItem("selectedPaymentType");
+    if (storedPaymentType) {
+      setSelectedPaymentType(storedPaymentType);
+    }
+
     const savedFormData = localStorage.getItem("checkoutFormData");
     if (savedFormData) {
       setFormData((prev) => ({
@@ -103,6 +108,7 @@ const ShowProcessOrder = ({
       window.open(`https://wa.me/79529794890?text=${encodedMessage}`, "_blank");
       localStorage.setItem("awaitingPaymentConfirmation", "true");
       localStorage.setItem("checkoutFormData", JSON.stringify(formData));
+      localStorage.setItem("selectedPaymentType", paymentType);
       setShowConfirm(true);
     } else if (paymentType === "ymoney") {
       window.open(
@@ -113,6 +119,7 @@ const ShowProcessOrder = ({
       );
       localStorage.setItem("awaitingPaymentConfirmation", "true");
       localStorage.setItem("checkoutFormData", JSON.stringify(formData));
+      localStorage.setItem("selectedPaymentType", paymentType);
       setShowConfirm(true);
     }
   };
@@ -263,13 +270,12 @@ const ShowProcessOrder = ({
                 body: JSON.stringify({
                   formData,
                   cartItems,
-                  paymentType: selectedPaymentType, // или "whatsapp", если нужно
+                  paymentType: selectedPaymentType,
                 }),
               }
             );
 
             const result = await response.json();
-            console.log(formData.userId);
             if (result.success) {
               await fetch(
                 `http://localhost:8000/clearCart.php?user_id=${formData.userId}`,

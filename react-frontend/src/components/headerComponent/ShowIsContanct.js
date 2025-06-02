@@ -18,7 +18,7 @@ const ShowIsContact = (props) => {
               <div>
                 <h3>Телефон</h3>
                 <a style={{ color: "#000000" }} href="tel:+79991234567">
-                  +7 (999) 123-45-67
+                  +7 (918) 011-64-74
                 </a>
               </div>
             </div>
@@ -28,7 +28,7 @@ const ShowIsContact = (props) => {
               <div>
                 <h3>Email</h3>
                 <a style={{ color: "#000000" }} href="mailto:info@example.com">
-                  info@example.com
+                  ilya.belokon.07@gmail.com
                 </a>
               </div>
             </div>
@@ -37,7 +37,7 @@ const ShowIsContact = (props) => {
               📍
               <div>
                 <h3>Адрес</h3>
-                <p>г. Москва, ул. Примерная, 123</p>
+                <p>г. Таганрог, ул. Чехова, 22</p>
               </div>
             </div>
 
